@@ -29,7 +29,18 @@ app.delete('/', (req, res) => {
 
 // route: transactions
 app.get('/transactions', (req,res) => {
-    return res.json(Object.values(transactions))
+    const page = parseInt(req.query.page) || 1; // Get the requested page (default to page 1 if not provided)
+    const pageSize = parseInt(req.query.pageSize) || 10; // Get the requested page size (default to 10 if not provided)
+  
+    // Calculate the start index and end index for pagination
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+  
+    // Get a subset of transactions based on pagination
+    const paginatedTransactions = Object.values(transactions).slice(startIndex, endIndex);
+  
+    res.json(paginatedTransactions);
+    // return res.json(Object.values(transactions))
 })
 
 app.get('/transaction/:transactionId', (req,res) => {
